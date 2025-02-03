@@ -1,0 +1,113 @@
+{% extends 'base.html'%}
+{% block content %}
+	<div class="w3-row-padding">
+		<div class="w3-half">
+			<div class="w3-card-4 w3-round-xlarge w3-padding w3-container">
+				
+					<p>
+						<div id="my_camera" style="width:320px; height:240px;margin:auto"></div>
+					</p>
+					<p>
+						<label>IDNO</label>
+						<input type="text" name="idno" id="idno" class="w3-input w3-border">
+					</p>
+					<p>
+						<label>LASTNAME</label>
+						<input type="text" name="lastname" id="lastname" class="w3-input w3-border">
+					</p>
+					<p>
+						<label>FIRSTNAME</label>
+						<input type="text" name="firstname" id="firstname" class="w3-input w3-border">
+					</p>
+					<p>
+						<label>COURSE</label>
+						<input type="text" name="course" id="course" class="w3-input w3-border">
+					</p>
+					<p>
+						<label>LEVEL</label>
+						<input type="text" name="level" id="level" class="w3-input w3-border">
+					</p>
+					<button class="w3-button w3-blue" onclick="take_snapshot()">SNAP</button>
+				
+			</div>
+			
+		</div>
+		<div class="w3-half">
+			<div class="w3-container w3-padding w3-card-4 w3-round-xlarge">
+				<div id="my_result" class="w3-center"></div>
+				<table class="w3-table-all">
+					<tr>
+						<td><b>IDNO</b></td>
+						<td><div id="my_idno"></td>
+					</tr>
+					<tr>
+						<td><b>LASTNAME</b></td>
+						<td><div id="my_lastname"></td>
+					</tr>
+					<tr>
+						<td><b>FIRSTNAME</b></td>
+						<td><div id="my_firstname"></td>
+					</tr>
+					<tr>
+						<td><b>COURSE</b></td>
+						<td><div id="my_course"></td>
+					</tr>
+					<tr>
+						<td><b>LEVEL</b></td>
+						<td><div id="my_level"></td>
+					</tr>
+				</table>
+				<button class="w3-button w3-blue" onclick="save_information()">SAVE</button>
+
+			</div>
+		</div>
+	</div>
+	<script language="JavaScript">
+	
+		Webcam.set({
+			width: 320,
+			height: 240,
+			dest_width: 320,
+			dest_height: 240,
+			image_format: 'jpeg',
+			jpeg_quality: 90,
+			force_flash: false,
+			flip_horiz: true,
+			fps: 45
+		});
+	
+	
+		Webcam.attach( '#my_camera' );
+		
+		function take_snapshot() {
+			Webcam.snap( function(data_uri) {
+				document.getElementById('my_result').innerHTML = "<img id='imageprev' src='"+data_uri+"'/>";
+				
+			} );
+			document.getElementById('my_idno').innerHTML =  document.getElementById('idno').value;
+			document.getElementById('my_lastname').innerHTML =  document.getElementById('lastname').value;
+			document.getElementById('my_firstname').innerHTML =  document.getElementById('firstname').value;
+			document.getElementById('my_course').innerHTML =  document.getElementById('course').value;
+			document.getElementById('my_level').innerHTML =  document.getElementById('level').value;
+		}
+
+		function save_information() {
+			var data_uri = document.getElementById('imageprev').src;
+			var idno = document.getElementById('my_idno').value;
+			var lastname = document.getElementById('my_lastname').value;
+			var firstname = document.getElementById('my_firstname').value;
+			var course = document.getElementById('my_course').value;
+			var level = document.getElementById('my_level').value;
+
+			var url = "/saveinformation?idno=" + idno + "&lastname=" + lastname + "&firstname=" + firstname + "&course=" + course + "&level=" + level;
+
+			Webcam.upload(data_uri, url,function(code, text){
+				alert("New Student Added")
+			});
+
+
+		}
+
+		
+	</script>
+{% endblock %}
